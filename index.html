@@ -2,29 +2,42 @@
 <html>
   <head>
     <title>reCAPTCHA</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
       function onCaptchaSuccess(token) {
-        // Send the token back to Flutter WebView
-        window.ReactNativeWebView?.postMessage(token);
+        window?.postMessage("verified");
       }
+
+      function sendHeightToFlutter() {
+        const height = document.body.scrollHeight;
+        window?.postMessage(height.toString());
+      }
+
+      window.onload = () => {
+        setTimeout(sendHeightToFlutter, 500);
+      };
+      window.onresize = sendHeightToFlutter;
     </script>
     <style>
       body {
         display: flex;
         height: 100vh;
-        align-items: center;
-        justify-content: center;
+        /* align-items: center;
+        justify-content: center; */
         background-color: #f9f9f9;
         margin: 0;
+        padding: 0;
       }
     </style>
   </head>
   <body>
-    <div class="g-recaptcha"
-      data-sitekey="6Leftz8rAAAAAF7Zoi21UgMeYqQfISDUlRf0Cpt_"
-      data-callback="onCaptchaSuccess">
+    <div id="captcha-wrapper">
+      <div
+        class="g-recaptcha"
+        data-sitekey="6Leftz8rAAAAAF7Zoi21UgMeYqQfISDUlRf0Cpt_"
+        data-callback="onCaptchaSuccess"
+      ></div>
     </div>
   </body>
 </html>
