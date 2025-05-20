@@ -8,6 +8,9 @@
       function onCaptchaSuccess(token) {
         window.Recaptcha?.postMessage("verified");
       }
+      function onCaptchaExpired() {
+        window.Recaptcha?.postMessage("expired");
+      }
 
       function sendHeightToFlutter() {
         const height = Math.max(
@@ -60,6 +63,7 @@
         class="g-recaptcha"
         data-sitekey="6Leftz8rAAAAAF7Zoi21UgMeYqQfISDUlRf0Cpt_"
         data-callback="onCaptchaSuccess"
+        data-expired-callback="onCaptchaExpired"
       ></div>
     </div>
   </body>
