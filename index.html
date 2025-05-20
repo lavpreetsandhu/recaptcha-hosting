@@ -33,14 +33,24 @@
       window.onresize = sendHeightToFlutter;
     </script>
     <style>
+      html,
       body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #f9f9f9;
         margin: 0;
         padding: 0;
+        background-color: #f9f9f9;
         min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #captcha-wrapper {
+        min-height: 120px; /* prevent tiny height issues */
+      }
+
+      .g-recaptcha {
+        position: relative;
+        z-index: 9999; /* ensure it's on top */
       }
     </style>
   </head>
