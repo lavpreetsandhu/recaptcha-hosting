@@ -6,28 +6,41 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
       function onCaptchaSuccess(token) {
-        window?.postMessage("verified");
+        window.Recaptcha?.postMessage("verified");
       }
 
       function sendHeightToFlutter() {
-        const height = document.body.scrollHeight;
-        window?.postMessage(height.toString());
+        const height = Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight
+        );
+        window.Recaptcha?.postMessage(height.toString());
       }
 
       window.onload = () => {
-        setTimeout(sendHeightToFlutter, 500);
+        sendHeightToFlutter();
+
+        const observer = new MutationObserver(() => {
+          setTimeout(sendHeightToFlutter, 100);
+        });
+
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
       };
+
       window.onresize = sendHeightToFlutter;
     </script>
     <style>
       body {
         display: flex;
-        height: 100vh;
-        /* align-items: center;
-        justify-content: center; */
-        /* background-color: #f9f9f9; */
+        align-items: center;
+        justify-content: center;
+        background-color: #f9f9f9;
         margin: 0;
         padding: 0;
+        min-height: 100vh;
       }
     </style>
   </head>
