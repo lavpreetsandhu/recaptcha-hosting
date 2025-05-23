@@ -5,43 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
-      function onCaptchaSuccess(token) {
-        window.Recaptcha?.postMessage("verified");
-      }
-      function onCaptchaExpired() {
-        window.Recaptcha?.postMessage("expired");
-      }
+            function onCaptchaSuccess(token) {
+              window.Recaptcha?.postMessage("verified");
+            }
+            function onCaptchaExpired() {
+              window.Recaptcha?.postMessage("expired");
+            }
 
-      function sendHeightToFlutter() {
-        const height = Math.max(
-          document.body.scrollHeight,
-          document.documentElement.scrollHeight
-        );
-        window.Recaptcha?.postMessage(height.toString());
-      }
+            function sendHeightToFlutter() {
+              const height = Math.max(
+                document.body.scrollHeight,
+                document.documentElement.scrollHeight
+              );
+              window.Recaptcha?.postMessage(height.toString());
+            }
 
-      window.onload = () => {
-        sendHeightToFlutter();
+            window.onload = () => {
+              sendHeightToFlutter();
 
-        const observer = new MutationObserver(() => {
-          setTimeout(sendHeightToFlutter, 100);
-        });
+              const observer = new MutationObserver(() => {
+                setTimeout(sendHeightToFlutter, 100);
+              });
 
-        observer.observe(document.body, {
-          childList: true,
-          subtree: true,
-        });
+              observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+              });
 
-        // === New MutationObserver to detect reCAPTCHA image challenge open/close ===
-        const captchaWrapper = document.getElementById("captcha-wrapper");
+              // === New MutationObserver to detect reCAPTCHA image challenge open/close ===
+              const captchaWrapper = document.getElementById("captcha-wrapper");
 
+              setTimeout(() => {
         const challengeObserver = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
               if (
                 node.nodeType === 1 &&
                 node.tagName === "IFRAME" &&
-                node.src.includes("google.com/recaptcha/api2/bframe")
+                node.src.includes("google.com/recaptcha/api2/bframe") &&
+                node.offsetParent !== null // only if visible
               ) {
                 console.log("Image challenge opened");
                 window.Recaptcha?.postMessage("challenge_opened");
@@ -65,9 +67,9 @@
           childList: true,
           subtree: true,
         });
-      };
+      }, 500);
 
-      window.onresize = sendHeightToFlutter;
+            window.onresize = sendHeightToFlutter;
     </script>
     <style>
       html,
