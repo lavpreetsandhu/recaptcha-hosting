@@ -41,6 +41,14 @@
               if (
                 node.nodeType === 1 &&
                 node.tagName === "IFRAME" &&
+                node.src.includes("google.com/recaptcha/api2/anchor")
+              ) {
+                console.log("checkbox_clicked");
+                window.Recaptcha?.postMessage("checkbox_clicked");
+              }
+              if (
+                node.nodeType === 1 &&
+                node.tagName === "IFRAME" &&
                 node.src.includes("google.com/recaptcha/api2/bframe") &&
                 node.offsetParent !== null // only if visible
               ) {
