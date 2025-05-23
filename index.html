@@ -42,16 +42,10 @@
                 if (
                   node.nodeType === 1 &&
                   node.tagName === "IFRAME" &&
-                  node.src.includes("google.com/recaptcha/api2/bframe")
+                  node.src.includes("google.com/recaptcha/api2/bframe") &&
+                  node.offsetParent !== null
                 ) {
-                  setTimeout(() => {
-                    if (
-                      document.body.contains(node) &&
-                      node.offsetParent !== null
-                    ) {
-                      window.Recaptcha?.postMessage("challenge_opened");
-                    }
-                  }, 250);
+                  window.Recaptcha?.postMessage("challenge_opened");
                 }
               });
 
