@@ -42,10 +42,17 @@
                 if (
                   node.nodeType === 1 &&
                   node.tagName === "IFRAME" &&
-                  node.src.includes("google.com/recaptcha/api2/bframe") &&
-                  node.offsetParent !== null
+                  node.src.includes("google.com/recaptcha/api2/bframe")
                 ) {
-                  window.Recaptcha?.postMessage("challenge_opened");
+                  setTimeout(() => {
+                    if (
+                      document.body.contains(node) &&
+                      node.offsetParent !== null
+                    ) {
+                      console.log("image challenege oened");
+                      window.Recaptcha?.postMessage("challenge_opened");
+                    }
+                  }, 250);
                 }
               });
 
