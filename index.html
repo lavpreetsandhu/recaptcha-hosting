@@ -45,11 +45,13 @@
                   node.src.includes("google.com/recaptcha/api2/bframe")
                 ) {
                   setTimeout(() => {
-                    if (node.offsetParent !== null) {
-                      console.log("Image challenge opened");
+                    if (
+                      document.body.contains(node) &&
+                      node.offsetParent !== null
+                    ) {
                       window.Recaptcha?.postMessage("challenge_opened");
                     }
-                  }, 0);
+                  }, 250);
                 }
               });
 
