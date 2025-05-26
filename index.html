@@ -49,11 +49,16 @@
               if (
                 node.nodeType === 1 &&
                 node.tagName === "IFRAME" &&
-                node.src.includes("google.com/recaptcha/api2/bframe") &&
-                node.offsetParent !== null // only if visible
+                node.src.includes("google.com/recaptcha/api2/bframe")
               ) {
-                console.log("Image challenge opened");
-                window.Recaptcha?.postMessage("challenge_opened");
+                // Defer visibility check after a short delay
+                setTimeout(() => {
+                  const rect = node.getBoundingClientRect();
+                  if (rect.width > 0 && rect.height > 0 && rect.top >= 0) {
+                    console.log("Image challenge opened");
+                    window.Recaptcha?.postMessage("challenge_opened");
+                  }
+                }, 200); // wait a bit to allow rendering
               }
             });
 
