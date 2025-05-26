@@ -118,25 +118,29 @@
 </html> -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>reCAPTCHA v3 Example</title>
-  <script src="https://www.google.com/recaptcha/api.js?render=YOUR_SITE_KEY"></script>
-</head>
-<body>
-  <h2>reCAPTCHA v3 Token Generator</h2>
-  <button onclick="executeRecaptcha()">Get reCAPTCHA Token</button>
+  <head>
+    <meta charset="UTF-8" />
+    <title>reCAPTCHA v3 Example</title>
+    <script src="https://www.google.com/recaptcha/api.js?render=YOUR_SITE_KEY"></script>
+  </head>
+  <body>
+    <h2>reCAPTCHA v3 Token Generator</h2>
+    <button onclick="executeRecaptcha()">Get reCAPTCHA Token</button>
 
-  <p id="token-output" style="margin-top: 20px; word-break: break-all;"></p>
+    <p id="token-output" style="margin-top: 20px; word-break: break-all"></p>
 
-  <script>
-    function executeRecaptcha() {
-      grecaptcha.ready(function () {
-        grecaptcha.execute('YOUR_SITE_KEY', { action: 'submit' }).then(function (token) {
-          document.getElementById('token-output').innerText = 'Token: ' + token;
+    <script>
+      function executeRecaptcha() {
+        grecaptcha.ready(function () {
+          grecaptcha
+            .execute("YOUR_SITE_KEY", { action: "submit" })
+            .then(function (token) {
+              document.getElementById("token-output").innerText =
+                "Token: " + token;
+              CaptchaChannel.postMessage(token);
 
-          // Example: Send the token to your backend
-          /*
+              // Example: Send the token to your backend
+              /*
           fetch('https://your-backend.com/verify-token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -145,9 +149,9 @@
             console.log(data);
           });
           */
+            });
         });
-      });
-    }
-  </script>
-</body>
+      }
+    </script>
+  </body>
 </html>
