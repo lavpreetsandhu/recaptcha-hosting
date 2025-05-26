@@ -133,7 +133,7 @@
       function executeRecaptcha() {
         grecaptcha.ready(function () {
           grecaptcha
-            .execute("YOUR_SITE_KEY", { action: "submit" })
+            .execute("6Le4pkkrAAAAAFhzpLorIi_UBht8W0tY7rU_zXmq", { action: "submit" })
             .then(function (token) {
               document.getElementById("token-output").innerText =
                 "Token: " + token;
