@@ -119,7 +119,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://www.google.com/recaptcha/api.js?render=6Le4pkkrAAAAAFhzpLorIi_UBht8W0tY7rU_zXmq"></script>
     <style>
       body {
@@ -202,14 +202,17 @@
                 CaptchaChannel.postMessage(token);
 
                 // Replace with your backend verification endpoint
-                fetch("https://your-backend.com/verify-recaptcha", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ token: token }),
-                })
+                fetch(
+                  "https://c637-117-207-236-26.ngrok-free.app/v1/captcha/verify-captcha",
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: token }),
+                  }
+                )
                   .then((response) => response.json())
                   .then((data) => {
-                    if (data.success && data.score >= 0.5) {
+                    if (data.isSuccess) {
                       output.innerText = "✔️ Verified! You may continue.";
                     } else {
                       output.innerText =
