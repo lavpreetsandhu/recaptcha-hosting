@@ -124,8 +124,6 @@
     <style>
       body {
         font-family: "Arial", sans-serif;
-        padding: 40px;
-        background-color: #f9f5ff;
       }
 
       .checkbox-container {
@@ -212,30 +210,18 @@
                 )
                   .then((response) => response.json())
                   .then((data) => {
-                    CaptchaChannel.postMessage(
-                      JSON.stringify({
-                        type: "response",
-                        data: data,
-                      })
-                    );
                     console.log(data, "data api response ");
                     if (data.isSuccess) {
-                      output.innerText = "✔️ Verified! You may continue.";
+                      CaptchaChannel.postMessage("success");
+                      // output.innerText = "✔️ Verified! You may continue.";
                     } else {
-                      output.innerText =
-                        "❌ Verification failed. Score: " + data.score;
+                      output.innerText = "❌ Verification failed.";
                       checkbox.checked = false;
                     }
                   })
                   .catch((error) => {
-                    CaptchaChannel.postMessage(
-                      JSON.stringify({
-                        type: "error",
-                        data: error,
-                      })
-                    );
-                    console.error("Backend error:", error);
-                    output.innerText = "❌ Backend error occurred.";
+                    CaptchaChannel.postMessage("failed");
+                    output.innerText = "❌ Verification failed.";
                     checkbox.checked = false;
                   });
               });
