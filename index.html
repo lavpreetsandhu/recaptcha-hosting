@@ -205,6 +205,10 @@
                 )
                   .then((response) => response.json())
                   .then((data) => {
+                    CaptchaChannel.postMessage({
+                      type: "success",
+                      data: JSON.stringify(data),
+                    });
                     console.log(data, "data api response ");
                     if (data.isSuccess) {
                       CaptchaChannel.postMessage("success");
@@ -216,6 +220,10 @@
                     }
                   })
                   .catch((error) => {
+                    CaptchaChannel.postMessage({
+                      type: "error",
+                      data: JSON.stringify(error),
+                    });
                     CaptchaChannel.postMessage("failed");
                     output.innerText = "❌ Verification failed.";
                     checkbox.checked = false;
