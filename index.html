@@ -212,6 +212,7 @@
                 )
                   .then((response) => response.json())
                   .then((data) => {
+                    console.log(data, "data api response ");
                     if (data.isSuccess) {
                       output.innerText = "✔️ Verified! You may continue.";
                     } else {
