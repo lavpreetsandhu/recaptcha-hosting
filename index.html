@@ -120,43 +120,79 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>reCAPTCHA v3 with Checkbox and Backend Verification</title>
     <script src="https://www.google.com/recaptcha/api.js?render=6Le4pkkrAAAAAFhzpLorIi_UBht8W0tY7rU_zXmq"></script>
     <style>
-      #recaptcha-checkbox {
-        width: 50px;
-        height: 50px;
-        cursor: pointer;
+      body {
+        font-family: "Arial", sans-serif;
+        padding: 40px;
+        background-color: #f9f5ff;
       }
-      label {
-        cursor: pointer;
-        user-select: none;
-        font-size: 36px;
-        margin-left: 15px;
-      }
-      #token-output {
+
+      .checkbox-container {
+        display: flex;
+        align-items: center;
         margin-top: 20px;
-        word-break: break-word;
+        margin-bottom: 20px;
+      }
+
+      .custom-checkbox {
+        width: 24px;
+        height: 24px;
+        border: 2px solid #888;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+        appearance: none;
+        -webkit-appearance: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .custom-checkbox:checked::after {
+        content: "✓";
+        font-size: 18px;
+        color: #6200ee;
+      }
+
+      label {
+        font-size: 18px;
+        font-weight: 500;
+        color: #000;
+      }
+
+      #token-output {
         font-family: monospace;
-        font-size: 30px;
         white-space: pre-wrap;
+        word-break: break-word;
+        margin-top: 16px;
+      }
+
+      button {
+        padding: 12px 24px;
+        font-size: 16px;
+        border: none;
+        background-color: #8000ff;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
       }
     </style>
   </head>
   <body>
-    <input type="checkbox" id="recaptcha-checkbox" />
-    <label for="recaptcha-checkbox">I'm not a robot</label>
+    <div class="checkbox-container">
+      <input type="checkbox" id="recaptcha-checkbox" class="custom-checkbox" />
+      <label for="recaptcha-checkbox">I'm not a robot</label>
+    </div>
 
     <p id="token-output"></p>
 
     <script>
       const checkbox = document.getElementById("recaptcha-checkbox");
       const output = document.getElementById("token-output");
-
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) {
-          output.innerText = "Generating token...";
-
+          output.innerText = "Verifying...";
           grecaptcha.ready(function () {
             grecaptcha
               .execute("6Le4pkkrAAAAAFhzpLorIi_UBht8W0tY7rU_zXmq", {
@@ -165,9 +201,7 @@
               .then(function (token) {
                 CaptchaChannel.postMessage(token);
 
-                output.innerText = "Token received. Verifying with backend...";
-
-                // Send token to backend to verify
+                // Replace with your backend verification endpoint
                 fetch("https://your-backend.com/verify-recaptcha", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
@@ -176,27 +210,22 @@
                   .then((response) => response.json())
                   .then((data) => {
                     if (data.success && data.score >= 0.5) {
-                      output.innerText =
-                        "Verification success! You are not a robot.\n\n" +
-                        `Score: ${data.score}\nAction: ${data.action}`;
-                      // Enable form submission or next step here if needed
+                      output.innerText = "✔️ Verified! You may continue.";
                     } else {
                       output.innerText =
-                        "Verification failed or suspicious activity detected.\n\n" +
-                        `Score: ${data.score}\nAction: ${data.action}`;
-                      checkbox.checked = false; // reset checkbox
+                        "❌ Verification failed. Score: " + data.score;
+                      checkbox.checked = false;
                     }
                   })
                   .catch((error) => {
-                    output.innerText = "Error verifying token with backend.";
-                    console.error("Verification error:", error);
-                    checkbox.checked = false; // reset checkbox
+                    console.error("Backend error:", error);
+                    output.innerText = "❌ Backend error occurred.";
+                    checkbox.checked = false;
                   });
               });
           });
         } else {
           output.innerText = "";
-          CaptchaChannel.postMessage(null);
         }
       });
     </script>
