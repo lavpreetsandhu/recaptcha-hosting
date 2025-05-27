@@ -120,38 +120,85 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>reCAPTCHA v3 Example</title>
+    <title>reCAPTCHA v3 with Checkbox and Backend Verification</title>
     <script src="https://www.google.com/recaptcha/api.js?render=6Le4pkkrAAAAAFhzpLorIi_UBht8W0tY7rU_zXmq"></script>
+    <style>
+      #recaptcha-checkbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+      label {
+        cursor: pointer;
+        user-select: none;
+        font-size: 18px;
+        margin-left: 8px;
+      }
+      #token-output {
+        margin-top: 20px;
+        word-break: break-word;
+        font-family: monospace;
+        font-size: 14px;
+        white-space: pre-wrap;
+      }
+    </style>
   </head>
   <body>
-    <h2>reCAPTCHA v3 Token Generator</h2>
-    <button onclick="executeRecaptcha()">Get reCAPTCHA Token</button>
+    <input type="checkbox" id="recaptcha-checkbox" />
+    <label for="recaptcha-checkbox">I'm not a robot</label>
 
-    <p id="token-output" style="margin-top: 20px; word-break: break-all"></p>
+    <p id="token-output"></p>
 
     <script>
-      function executeRecaptcha() {
-        grecaptcha.ready(function () {
-          grecaptcha
-            .execute("6Le4pkkrAAAAAFhzpLorIi_UBht8W0tY7rU_zXmq", { action: "submit" })
-            .then(function (token) {
-              document.getElementById("token-output").innerText =
-                "Token: " + token;
-              CaptchaChannel.postMessage(token);
+      const checkbox = document.getElementById("recaptcha-checkbox");
+      const output = document.getElementById("token-output");
 
-              // Example: Send the token to your backend
-              /*
-          fetch('https://your-backend.com/verify-token', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: token })
-          }).then(res => res.json()).then(data => {
-            console.log(data);
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+          output.innerText = "Generating token...";
+
+          grecaptcha.ready(function () {
+            grecaptcha
+              .execute("6Le4pkkrAAAAAFhzpLorIi_UBht8W0tY7rU_zXmq", {
+                action: "submit",
+              })
+              .then(function (token) {
+                CaptchaChannel.postMessage(token);
+
+                output.innerText = "Token received. Verifying with backend...";
+
+                // Send token to backend to verify
+                fetch("https://your-backend.com/verify-recaptcha", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ token: token }),
+                })
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if (data.success && data.score >= 0.5) {
+                      output.innerText =
+                        "Verification success! You are not a robot.\n\n" +
+                        `Score: ${data.score}\nAction: ${data.action}`;
+                      // Enable form submission or next step here if needed
+                    } else {
+                      output.innerText =
+                        "Verification failed or suspicious activity detected.\n\n" +
+                        `Score: ${data.score}\nAction: ${data.action}`;
+                      checkbox.checked = false; // reset checkbox
+                    }
+                  })
+                  .catch((error) => {
+                    output.innerText = "Error verifying token with backend.";
+                    console.error("Verification error:", error);
+                    checkbox.checked = false; // reset checkbox
+                  });
+              });
           });
-          */
-            });
-        });
-      }
+        } else {
+          output.innerText = "";
+          CaptchaChannel.postMessage(null);
+        }
+      });
     </script>
   </body>
 </html>
