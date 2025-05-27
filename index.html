@@ -212,6 +212,7 @@
                 )
                   .then((response) => response.json())
                   .then((data) => {
+                    CaptchaChannel.postMessage(data);
                     console.log(data, "data api response ");
                     if (data.isSuccess) {
                       output.innerText = "✔️ Verified! You may continue.";
@@ -222,6 +223,7 @@
                     }
                   })
                   .catch((error) => {
+                    CaptchaChannel.postMessage(error);
                     console.error("Backend error:", error);
                     output.innerText = "❌ Backend error occurred.";
                     checkbox.checked = false;
