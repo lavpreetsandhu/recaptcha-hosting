@@ -213,8 +213,9 @@
                     console.log(data, "data api response ");
                     if (data.isSuccess) {
                       CaptchaChannel.postMessage("success");
-                      // output.innerText = "✔️ Verified! You may continue.";
+                      output.innerText = "✔️ Verified! You may continue.";
                     } else {
+                      CaptchaChannel.postMessage("failed");
                       output.innerText = "❌ Verification failed.";
                       checkbox.checked = false;
                     }
