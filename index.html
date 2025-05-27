@@ -196,7 +196,7 @@
 
                 // Replace with your backend verification endpoint
                 fetch(
-                  "https://c637-117-207-236-26.ngrok-free.app/v1/captcha/verify-captcha",
+                  "https://uggxbsymde.us-east-2.awsapprunner.com/v1/captcha/verify-captcha",
                   {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -208,7 +208,7 @@
                     console.log(data, "data api response ");
                     if (data.isSuccess) {
                       CaptchaChannel.postMessage("success");
-                      output.innerText = "✔️ Verified! You may continue.";
+                      output.innerText = "";
                     } else {
                       CaptchaChannel.postMessage("failed");
                       output.innerText = "❌ Verification failed.";
